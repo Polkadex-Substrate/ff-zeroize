@@ -4,6 +4,13 @@
 #![deny(intra_doc_link_resolution_failure)]
 #![allow(unused_imports)]
 
+#![cfg_attr(not(target_env = "sgx"), no_std)]
+#![cfg_attr(target_env = "sgx", feature(rustc_private))]
+
+#[cfg(not(target_env = "sgx"))]
+#[macro_use]
+extern crate sgx_tstd as std;
+
 #[cfg(feature = "derive")]
 #[macro_use]
 extern crate ff_derive;
@@ -14,10 +21,13 @@ pub use ff_derive::*;
 #[macro_use]
 extern crate zeroize;
 
+
+
 use rand_core::RngCore;
 use std::error::Error;
 use std::fmt;
 use std::io::{self, Read, Write};
+use std::string::String;
 
 /// This trait represents an element of a field.
 pub trait Field:
